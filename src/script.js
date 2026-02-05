@@ -35,8 +35,12 @@ function processSplit() {
     return;
   }
 
+  // Sanitize the user-provided HTML before parsing it to avoid reinterpreting
+  // untrusted DOM text as executable HTML.
+  const sanitizedHtml = DOMPurify.sanitize(inputHtml, { WHOLE_DOCUMENT: true });
+
   const parser = new DOMParser();
-  const doc = parser.parseFromString(inputHtml, "text/html");
+  const doc = parser.parseFromString(sanitizedHtml, "text/html");
 
   // EXTRACT CSS
   let cssContent = "/* Extracted Styles */\n\n";

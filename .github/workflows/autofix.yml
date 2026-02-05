@@ -1,4 +1,4 @@
-name: Lint and format
+name: Lint and Format
 
 on:
   push:
@@ -10,27 +10,31 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint:
-    name: Lint check & auto-fix
+  lint-check:
+    name: Lint Check & Auto-fix
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v6
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # FIX: Prevent checkout from persisting credentials.
+          # This avoids the "Duplicate header: Authorization" error when create-pull-request runs.
+          persist-credentials: false
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
       # ---------------------------------------------------------
       # CASE 1: Pull Requests (Not Main)
       # Run lint check AND format check. Fail workflow if issues exist.
       # ---------------------------------------------------------
-      - name: Check linting & formatting (PR)
+      - name: Check Linting & Formatting (PR)
         if: github.ref != 'refs/heads/main'
         run: |
           npx eslint .
@@ -40,7 +44,7 @@ jobs:
       # CASE 2: Main Branch
       # Run lint --fix AND prettier --write. If changes occur, create a PR.
       # ---------------------------------------------------------
-      - name: Lint and format (main)
+      - name: Lint and Format (Main)
         if: github.ref == 'refs/heads/main'
         id: lint-fix
         # We run both tools. "|| true" ensures we don't crash if eslint has unfixable errors,
@@ -49,7 +53,7 @@ jobs:
           npx eslint . --fix || true
           npx prettier . --write
 
-      - name: Create fix PR
+      - name: Create Fix PR
         if: github.ref == 'refs/heads/main'
         uses: peter-evans/create-pull-request@v6
         with:

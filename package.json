@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/kx1xixit/splitter#readme",
   "devDependencies": {
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.1",
     "serve": "^14.2.0"
   }
 }

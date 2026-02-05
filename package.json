@@ -1,0 +1,33 @@
+{
+  "name": "kx-splitter",
+  "version": "1.0.0",
+  "description": "A web utility used to separate single-file HTML apps into HTML, CSS, and JS. It can also combine.",
+  "main": "/src/index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kx1xixit/splitter.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "splitter",
+    "combiner",
+    "utility",
+    "web-tool",
+    "developer-tools"
+  ],
+  "author": "",
+  "license": "KBEC-1.0",
+  "bugs": {
+    "url": "https://github.com/kx1xixit/splitter/issues"
+  },
+  "homepage": "https://github.com/kx1xixit/splitter#readme",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

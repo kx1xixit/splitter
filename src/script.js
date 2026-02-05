@@ -115,7 +115,7 @@ function processCombine() {
   // Remove any existing <script> elements from the input HTML to avoid
   // carrying through arbitrary executable content from the DOM text.
   const existingScripts = doc.querySelectorAll("script");
-  existingScripts.forEach((node) => node.remove());
+  existingScripts.forEach((node) => { node.remove(); });
 
   // INJECT CSS
   if (css.trim()) {

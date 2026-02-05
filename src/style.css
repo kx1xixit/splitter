@@ -1,0 +1,55 @@
+:root {
+            --bg-editor: #1e293b;
+            --text-editor: #e2e8f0;
+        }
+        body {
+            /* Windows 10 Standard Font */
+            font-family: 'Segoe UI', 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            /* darker background to make acrylic pop */
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 70%);
+        }
+        textarea {
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+        /* Windows 10 Style Scrollbar - Squared */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 0px; /* Sharp corners */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; 
+        }
+        .tab-active {
+            border-bottom: 2px solid #38bdf8;
+            color: #38bdf8;
+            background-color: rgba(255,255,255,0.05);
+        }
+        .tab-inactive {
+            color: #94a3b8;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: #e2e8f0;
+            background-color: rgba(255,255,255,0.02);
+        }
+        
+        /* Utility for Acrylic effect fallback */
+        .acrylic-panel {
+            background-color: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }

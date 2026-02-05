@@ -4,7 +4,7 @@
   "description": "A web utility used to separate single-file HTML apps into HTML, CSS, and JS. It can also combine.",
   "main": "/src/index.html",
   "scripts": {
-    "start": "npx serve /src/"
+    "start": "npx serve src"
   },
   "repository": {
     "type": "git",

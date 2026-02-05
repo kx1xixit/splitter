@@ -1,4 +1,4 @@
-name: Lint and Format
+name: Lint and format
 
 on:
   push:
@@ -10,27 +10,27 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint-check:
-    name: Lint Check & Auto-fix
+  lint:
+    name: Lint check & auto-fix
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
       # ---------------------------------------------------------
       # CASE 1: Pull Requests (Not Main)
       # Run lint check only. Fail workflow if issues exist.
       # ---------------------------------------------------------
-      - name: Check Linting (PR)
+      - name: Check linting (PR)
         if: github.ref != 'refs/heads/main'
         run: npx eslint .
 
@@ -38,14 +38,14 @@ jobs:
       # CASE 2: Main Branch
       # Run lint --fix. If changes occur, create a PR.
       # ---------------------------------------------------------
-      - name: Lint and Fix (Main)
+      - name: Lint and fix (main)
         if: github.ref == 'refs/heads/main'
         id: lint-fix
         # We append "|| true" so the step doesn't fail immediately on unfixable errors,
         # allowing the "Create Pull Request" step to run and capture partial fixes.
         run: npx eslint . --fix || true
 
-      - name: Create Fix PR
+      - name: Create fix PR
         if: github.ref == 'refs/heads/main'
         uses: peter-evans/create-pull-request@v6
         with:

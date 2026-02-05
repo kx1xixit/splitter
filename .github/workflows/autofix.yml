@@ -1,4 +1,4 @@
-name: Lint and Format
+name: Lint and format
 
 on:
   push:
@@ -10,27 +10,27 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint-check:
-    name: Lint Check & Auto-fix
+  lint:
+    name: Lint check & auto-fix
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
       # ---------------------------------------------------------
       # CASE 1: Pull Requests (Not Main)
       # Run lint check AND format check. Fail workflow if issues exist.
       # ---------------------------------------------------------
-      - name: Check Linting & Formatting (PR)
+      - name: Check linting & formatting (PR)
         if: github.ref != 'refs/heads/main'
         run: |
           npx eslint .
@@ -40,7 +40,7 @@ jobs:
       # CASE 2: Main Branch
       # Run lint --fix AND prettier --write. If changes occur, create a PR.
       # ---------------------------------------------------------
-      - name: Lint and Format (Main)
+      - name: Lint and format (main)
         if: github.ref == 'refs/heads/main'
         id: lint-fix
         # We run both tools. "|| true" ensures we don't crash if eslint has unfixable errors,
@@ -49,7 +49,7 @@ jobs:
           npx eslint . --fix || true
           npx prettier . --write
 
-      - name: Create Fix PR
+      - name: Create fix PR
         if: github.ref == 'refs/heads/main'
         uses: peter-evans/create-pull-request@v6
         with:

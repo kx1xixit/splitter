@@ -34,8 +34,5 @@
     "eslint": "^9.39.2",
     "prettier": "^3.8.1",
     "serve": "^14.2.0"
-  },
-  "dependencies": {
-    "dompurify": "^3.3.1"
-}
+  }
 }

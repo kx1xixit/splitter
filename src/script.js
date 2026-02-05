@@ -1,6 +1,8 @@
 // Initialize Icons
 lucide.createIcons();
 
+/* global DOMPurify */
+
 // --- TAB MANAGEMENT ---
 function switchTab(tab) {
   const splitView = document.getElementById("view-split");

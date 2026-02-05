@@ -37,12 +37,9 @@ function processSplit() {
     return;
   }
 
-  // Sanitize the user-provided HTML before parsing it to avoid reinterpreting
-  // untrusted DOM text as executable HTML.
-  const sanitizedHtml = DOMPurify.sanitize(inputHtml, { WHOLE_DOCUMENT: true });
-
+  // Parse the raw HTML first to extract scripts and styles before sanitization
   const parser = new DOMParser();
-  const doc = parser.parseFromString(sanitizedHtml, "text/html");
+  const doc = parser.parseFromString(inputHtml, "text/html");
 
   // EXTRACT CSS
   let cssContent = "/* Extracted Styles */\n\n";
@@ -81,6 +78,9 @@ function processSplit() {
 
   // Add DOCTYPE if it was likely there (DOMParser strips it usually)
   finalHtml = "<!DOCTYPE html>\n" + finalHtml;
+
+  // Sanitize the final document to ensure safe output
+  finalHtml = DOMPurify.sanitize(finalHtml, { WHOLE_DOCUMENT: true });
 
   // OUTPUT
   document.getElementById("split-out-html").value = finalHtml;

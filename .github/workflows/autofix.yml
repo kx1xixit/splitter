@@ -1,0 +1,62 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lint-check:
+    name: Lint Check & Auto-fix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      # ---------------------------------------------------------
+      # CASE 1: Pull Requests (Not Main)
+      # Run lint check only. Fail workflow if issues exist.
+      # ---------------------------------------------------------
+      - name: Check Linting (PR)
+        if: github.ref != 'refs/heads/main'
+        run: npx eslint .
+
+      # ---------------------------------------------------------
+      # CASE 2: Main Branch
+      # Run lint --fix. If changes occur, create a PR.
+      # ---------------------------------------------------------
+      - name: Lint and Fix (Main)
+        if: github.ref == 'refs/heads/main'
+        id: lint-fix
+        # We append "|| true" so the step doesn't fail immediately on unfixable errors,
+        # allowing the "Create Pull Request" step to run and capture partial fixes.
+        run: npx eslint . --fix || true
+
+      - name: Create Fix PR
+        if: github.ref == 'refs/heads/main'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: auto-fix linting issues"
+          title: "chore: Auto-fix Linting Issues"
+          body: |
+            This PR was automatically generated to fix linting issues detected on the `main` branch.
+            
+            Please review the changes and merge if correct.
+            Please note that the CI checks may not run with GitHub's restrictions, manual review may be required.
+          branch: "auto-lint-fixes"
+          base: "main"
+          delete-branch: true

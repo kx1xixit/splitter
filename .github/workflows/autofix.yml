@@ -1,4 +1,4 @@
-name: Lint and format
+name: Lint and Format
 
 on:
   push:
@@ -10,53 +10,60 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint:
-    name: Lint check & auto-fix
+  lint-check:
+    name: Lint Check & Auto-fix
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
       # ---------------------------------------------------------
       # CASE 1: Pull Requests (Not Main)
-      # Run lint check only. Fail workflow if issues exist.
+      # Run lint check AND format check. Fail workflow if issues exist.
       # ---------------------------------------------------------
-      - name: Check linting (PR)
+      - name: Check Linting & Formatting (PR)
         if: github.ref != 'refs/heads/main'
-        run: npx eslint .
+        run: |
+          npx eslint .
+          npx prettier . --check
 
       # ---------------------------------------------------------
       # CASE 2: Main Branch
-      # Run lint --fix. If changes occur, create a PR.
+      # Run lint --fix AND prettier --write. If changes occur, create a PR.
       # ---------------------------------------------------------
-      - name: Lint and fix (main)
+      - name: Lint and Format (Main)
         if: github.ref == 'refs/heads/main'
         id: lint-fix
-        # We append "|| true" so the step doesn't fail immediately on unfixable errors,
-        # allowing the "Create Pull Request" step to run and capture partial fixes.
-        run: npx eslint . --fix || true
+        # We run both tools. "|| true" ensures we don't crash if eslint has unfixable errors,
+        # so Prettier still gets a chance to run, and the PR step can capture whatever was fixed.
+        run: |
+          npx eslint . --fix || true
+          npx prettier . --write
 
-      - name: Create fix PR
+      - name: Create Fix PR
         if: github.ref == 'refs/heads/main'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: auto-fix linting issues"
-          title: "chore: Auto-fix Linting Issues"
+          commit-message: "chore: auto-fix linting and formatting issues"
+          title: "chore: Auto-fix Linting & Formatting"
           body: |
-            This PR was automatically generated to fix linting issues detected on the `main` branch.
-            
+            This PR was automatically generated to fix linting and formatting issues detected on the `main` branch.
+
+            Tools used:
+            - ESLint (--fix)
+            - Prettier (--write)
+
             Please review the changes and merge if correct.
-            Please note that the CI checks may not run with GitHub's restrictions, manual review may be required.
           branch: "auto-lint-fixes"
           base: "main"
           delete-branch: true

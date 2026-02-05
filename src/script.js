@@ -112,6 +112,11 @@ function processCombine() {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 
+  // Remove any existing <script> elements from the input HTML to avoid
+  // carrying through arbitrary executable content from the DOM text.
+  const existingScripts = doc.querySelectorAll("script");
+  existingScripts.forEach((node) => node.remove());
+
   // INJECT CSS
   if (css.trim()) {
     const styleTag = doc.createElement("style");
@@ -122,6 +127,8 @@ function processCombine() {
   // INJECT JS
   if (js.trim()) {
     const scriptTag = doc.createElement("script");
+    // Mark this script so that only explicitly provided JS is preserved.
+    scriptTag.setAttribute("data-combined-js", "true");
     scriptTag.textContent = "\n" + js.trim() + "\n";
     doc.body.appendChild(scriptTag);
   }

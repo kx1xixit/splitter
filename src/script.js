@@ -1,6 +1,8 @@
 // Initialize Icons
 lucide.createIcons();
 
+/* global DOMPurify */
+
 // --- TAB MANAGEMENT ---
 function switchTab(tab) {
   const splitView = document.getElementById("view-split");
@@ -35,6 +37,7 @@ function processSplit() {
     return;
   }
 
+  // Parse the raw HTML first to extract scripts and styles before sanitization
   const parser = new DOMParser();
   const doc = parser.parseFromString(inputHtml, "text/html");
 
@@ -75,6 +78,9 @@ function processSplit() {
 
   // Add DOCTYPE if it was likely there (DOMParser strips it usually)
   finalHtml = "<!DOCTYPE html>\n" + finalHtml;
+
+  // Sanitize the final document to ensure safe output
+  finalHtml = DOMPurify.sanitize(finalHtml, { WHOLE_DOCUMENT: true });
 
   // OUTPUT
   document.getElementById("split-out-html").value = finalHtml;
